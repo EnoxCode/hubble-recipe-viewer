@@ -1,6 +1,6 @@
 {
   "name": "hubble-module-hubble-recipe-viewer",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "A viewer for the mela recipe format",
   "private": true,
   "keywords": [
