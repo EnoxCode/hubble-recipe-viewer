@@ -3,6 +3,14 @@
 
 /* ─── Layout ─── */
 
+/* Force the Hubble widget container to fill its dropzone height */
+.module_container:has(.rcp-widget),
+.module_container:has(.rcp-widget-single) {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
 .rcp-widget {
   background: rgba(var(--dash-tint-r), var(--dash-tint-g), var(--dash-tint-b), var(--dash-panel-opacity));
   backdrop-filter: blur(var(--dash-panel-blur));
@@ -11,7 +19,8 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  height: 100%;
+  flex: 1;
+  min-height: 0;
 }
 
 .rcp-widget-single {
@@ -22,7 +31,8 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  height: 100%;
+  flex: 1;
+  min-height: 0;
   align-items: center;
   justify-content: center;
 }
