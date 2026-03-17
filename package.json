@@ -1,0 +1,35 @@
+{
+  "name": "hubble-module-hubble-mela-recipe-viewer",
+  "version": "0.1.0",
+  "description": "A viewer for the mela recipe format",
+  "private": true,
+  "keywords": [
+    "hubble-module"
+  ],
+  "scripts": {
+    "build": "create-hubble-module build",
+    "validate": "create-hubble-module validate",
+    "dev": "create-hubble-module dev",
+    "register": "create-hubble-module register",
+    "deploy": "create-hubble-module deploy",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.0.0",
+    "@hubblehome/module-scaffolding": "*",
+    "@testing-library/jest-dom": "^6.0.0",
+    "@testing-library/react": "^16.0.0",
+    "@testing-library/user-event": "^14.0.0",
+    "esbuild": "^0.24.0",
+    "eslint": "^9.0.0",
+    "eslint-plugin-react-hooks": "^5.0.0",
+    "jsdom": "^25.0.0",
+    "typescript-eslint": "^8.0.0",
+    "vitest": "^2.0.0"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.79.0"
+  }
+}

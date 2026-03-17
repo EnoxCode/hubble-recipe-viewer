@@ -1,0 +1,55 @@
+{
+  "name": "hubble-mela-recipe-viewer",
+  "version": "0.1.0",
+  "description": "A viewer for the mela recipe format",
+  "minAppVersion": "0.1.0",
+  "type": [
+    "connector",
+    "visualization"
+  ],
+  "endpoints": [
+    {
+      "name": "receive",
+      "method": "POST",
+      "path": "/receive",
+      "description": "Receive a recipe from Mela app"
+    }
+  ],
+  "properties": [
+    {
+      "name": "anthropicApiKey",
+      "type": "secret",
+      "required": true,
+      "description": "Anthropic API key for Claude AI recipe processing"
+    },
+    {
+      "name": "anthropicModel",
+      "type": "string",
+      "required": false,
+      "default": "claude-sonnet-4-6",
+      "description": "Claude model to use for recipe processing"
+    }
+  ],
+  "visualizations": [
+    {
+      "name": "default",
+      "description": "Recipe viewer dashboard widget",
+      "path": "default",
+      "selectable": true,
+      "hardwareButtons": {
+        "button1": "primary",
+        "button2": "back",
+        "button3": "contextual",
+        "button4": "switch"
+      },
+      "properties": [
+        {
+          "name": "title",
+          "type": "string",
+          "required": true,
+          "description": "Widget title displayed in the edit interface"
+        }
+      ]
+    }
+  ]
+}
