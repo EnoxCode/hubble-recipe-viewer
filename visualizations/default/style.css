@@ -399,9 +399,31 @@
   color: var(--dash-state-positive);
 }
 
+.rcp-callout-body {
+  flex: 1;
+  min-width: 0;
+}
+
 .rcp-callout-sub {
   font-size: 9px;
   color: var(--dash-text-muted);
+}
+
+.rcp-callout-action {
+  font-size: 8px;
+  font-weight: 500;
+  color: var(--dash-state-warning);
+  opacity: 0.7;
+  flex-shrink: 0;
+  padding: 2px 6px;
+  border-radius: 3px;
+  background: rgba(251, 191, 36, 0.1);
+  animation: rcp-action-pulse 2s ease-in-out infinite;
+}
+
+@keyframes rcp-action-pulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
 }
 
 /* ─── Footer ─── */
@@ -601,6 +623,38 @@
 .muted-text {
   font-size: 8px;
   color: var(--dash-text-muted);
+}
+
+/* ─── AI Processing Screen ─── */
+
+.rcp-processing {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 40px 20px;
+  flex: 1;
+}
+
+.rcp-processing-title {
+  font-size: 24px;
+  font-weight: 300;
+  letter-spacing: -0.5px;
+  color: var(--dash-text-primary);
+  text-align: center;
+}
+
+.rcp-processing-sub {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--dash-text-secondary);
+  animation: rcp-fade-dots 2s ease-in-out infinite;
+}
+
+@keyframes rcp-fade-dots {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
 }
 
 /* ─── AI Processing Spinner ─── */

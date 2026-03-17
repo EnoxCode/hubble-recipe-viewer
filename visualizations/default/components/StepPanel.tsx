@@ -100,6 +100,7 @@ export function StepPanel({
                       type="timer"
                       title={timer.label}
                       subtitle={subtitle}
+                      actionHint="B3 to start ▶"
                     />
                   );
                 })}
