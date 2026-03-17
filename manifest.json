@@ -19,7 +19,8 @@
       "name": "start-timer",
       "method": "POST",
       "path": "/start-timer",
-      "description": "Start a timer on the first available timer widget"
+      "description": "Start a timer on the first available timer widget",
+      "public": true
     }
   ],
   "properties": [
