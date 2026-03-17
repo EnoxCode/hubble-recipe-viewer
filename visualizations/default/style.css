@@ -51,6 +51,12 @@
   min-height: 0;
 }
 
+/* Step nav and progress stay pinned at top of right panel */
+.rcp-step-nav,
+.rcp-progress {
+  flex-shrink: 0;
+}
+
 /* ─── Image ─── */
 
 .rcp-image-wrap {
@@ -384,6 +390,7 @@
 
 .rcp-footer {
   border-top: 1px solid var(--dash-divider);
+  flex-shrink: 0;
 }
 
 .rcp-footer-single {
@@ -467,6 +474,18 @@
   flex-direction: column;
   gap: 4px;
   padding: 14px 18px;
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.rcp-overview::-webkit-scrollbar {
+  width: 3px;
+}
+
+.rcp-overview::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 2px;
 }
 
 .rcp-overview-row {
@@ -564,4 +583,55 @@
 .muted-text {
   font-size: 8px;
   color: var(--dash-text-muted);
+}
+
+/* ─── AI Processing Spinner ─── */
+
+.rcp-processing-spinner {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rcp-spinner-svg {
+  width: 48px;
+  height: 48px;
+  animation: rcp-spin 2s linear infinite;
+}
+
+.rcp-spinner-track {
+  stroke: rgba(255, 255, 255, 0.06);
+}
+
+.rcp-spinner-arc {
+  stroke: var(--dash-state-info);
+  opacity: 0.6;
+  stroke-dasharray: 80 100;
+  stroke-dashoffset: 0;
+  animation: rcp-arc 1.5s ease-in-out infinite;
+}
+
+.rcp-spinner-icon {
+  position: absolute;
+  font-size: 18px;
+  animation: rcp-pulse 2s ease-in-out infinite;
+}
+
+@keyframes rcp-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes rcp-arc {
+  0% { stroke-dasharray: 10 100; stroke-dashoffset: 0; }
+  50% { stroke-dasharray: 80 100; stroke-dashoffset: -30; }
+  100% { stroke-dasharray: 10 100; stroke-dashoffset: -100; }
+}
+
+@keyframes rcp-pulse {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.1); }
 }

@@ -206,6 +206,17 @@ export function useRecipeNavigation(data: RecipeViewerData | null) {
             return updateRecipe({ gatheredIngredientIds: [...gathered], gatherCursorIndex: nextCursor });
           }
 
+          if (action === 'back') {
+            // Skip gathering, go straight to cooking
+            return updateRecipe({
+              phase: 'cooking',
+              gatheredIngredientIds: [],
+              currentGroupIndex: 0,
+              currentStepIndex: 0,
+              gatherCursorIndex: 0,
+            });
+          }
+
           if (action === 'primary') {
             const gathered = new Set(rs.gatheredIngredientIds);
 

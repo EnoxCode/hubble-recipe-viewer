@@ -36,7 +36,7 @@ describe('EmptyState', () => {
 describe('ProcessingState', () => {
   it('renders the recipe title', () => {
     render(<ProcessingState title="Beef Stir-Fry" />);
-    expect(screen.getByText('Processing recipe…')).toBeInTheDocument();
+    expect(screen.getByText('AI is processing your recipe…')).toBeInTheDocument();
     expect(screen.getByText('Beef Stir-Fry')).toBeInTheDocument();
   });
 });
@@ -231,7 +231,7 @@ describe('HubbleMelaRecipeViewerViz (integration)', () => {
     const recipe = makeTestRecipe({ id: 'p1', status: 'processing', title: 'Slow Cooker Chili' });
     vi.mocked(useConnectorData).mockReturnValue({ recipes: { p1: recipe } });
     render(<HubbleMelaRecipeViewerViz />);
-    expect(screen.getByText('Processing recipe…')).toBeInTheDocument();
+    expect(screen.getByText('AI is processing your recipe…')).toBeInTheDocument();
     expect(screen.getByText('Slow Cooker Chili')).toBeInTheDocument();
   });
 
