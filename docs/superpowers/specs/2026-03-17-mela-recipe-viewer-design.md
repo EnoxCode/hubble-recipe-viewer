@@ -3,7 +3,7 @@
 **Date:** 2026-03-17
 **Design system:** [Dashboard Design System](../../../docs/superpowers/specs/2026-03-14-dashboard-design-system.md)
 **Visual companion:** `.superpowers/brainstorm/41279-1773742516/recipe-widget-v6.html`
-**Module:** `hubble-mela-recipe-viewer` — connector + visualization (hybrid)
+**Module:** `hubble-recipe-viewer` — connector + visualization (hybrid)
 
 ---
 
@@ -20,7 +20,7 @@ Designed for the top half of a portrait 1920×1080 Cooking page. Full width, hal
 ### Data Flow
 
 ```
-Mela app → POST /api/modules/hubble-mela-recipe-viewer/receive
+Mela app → POST /api/modules/hubble-recipe-viewer/receive
          → Connector receives raw mela JSON
          → Emits { status: 'processing', title } immediately
          → Strips image, sends to Claude API for processing
@@ -153,7 +153,7 @@ interface ProcessedTimer {
 
 ### Emit
 
-Connector emits to `hubble-mela-recipe-viewer:data` with the full list of processed recipes.
+Connector emits to `hubble-recipe-viewer:data` with the full list of processed recipes.
 
 ---
 

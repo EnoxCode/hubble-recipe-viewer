@@ -15,7 +15,7 @@
 ## File Structure
 
 ```
-hubble-mela-recipe-viewer/
+hubble-recipe-viewer/
 ├── manifest.json                          # MODIFY: add endpoints, hardwareButtons, config properties
 ├── connector/
 │   ├── index.ts                           # MODIFY: API endpoint handler + AI orchestration
@@ -64,7 +64,7 @@ hubble-mela-recipe-viewer/
 
 ```json
 {
-  "name": "hubble-mela-recipe-viewer",
+  "name": "hubble-recipe-viewer",
   "version": "0.1.0",
   "description": "A viewer for the mela recipe format",
   "minAppVersion": "0.1.0",
@@ -712,7 +712,7 @@ export default function connector(sdk: ServerSdk) {
   const recipes = new Map<string, ProcessedRecipe>();
 
   function emitAll() {
-    sdk.emit('hubble-mela-recipe-viewer:data', {
+    sdk.emit('hubble-recipe-viewer:data', {
       recipes: Object.fromEntries(recipes),
     });
   }
@@ -1461,7 +1461,7 @@ After all tasks are complete:
    - Start Hubble in dev mode: `npm run dev`
    - Send a test recipe via curl:
      ```bash
-     curl -X POST http://localhost:3000/api/modules/hubble-mela-recipe-viewer/receive \
+     curl -X POST http://localhost:3000/api/modules/hubble-recipe-viewer/receive \
        -H "Content-Type: application/vnd.melarecipe" \
        -d @"Black pepper beef stir-fry.melarecipe"
      ```

@@ -33,7 +33,7 @@ export default function connector(sdk: ServerSdk) {
   const recipes = new Map<string, ProcessedRecipe>();
 
   function emitAll() {
-    sdk.emit('hubble-mela-recipe-viewer:data', {
+    sdk.emit('hubble-recipe-viewer:data', {
       recipes: Object.fromEntries(recipes),
     });
   }

@@ -13,7 +13,7 @@ Claude AI processes each recipe to extract individual steps, link ingredients to
 
 ## Setup
 
-1. Install the `hubble-mela-recipe-viewer` module in Hubble.
+1. Install the `hubble-recipe-viewer` module in Hubble.
 2. Open the module settings and enter your Anthropic API key in the **anthropicApiKey** field.
 3. Optionally change the **anthropicModel** (defaults to `claude-sonnet-4-6`).
 4. Add the Recipe Viewer widget to your Cooking page.
@@ -23,7 +23,7 @@ Claude AI processes each recipe to extract individual steps, link ingredients to
 The module exposes a POST endpoint that accepts Mela recipe files:
 
 ```
-POST http://<hubble-ip>:3000/api/modules/hubble-mela-recipe-viewer/receive
+POST http://<hubble-ip>:3000/api/modules/hubble-recipe-viewer/receive
 Content-Type: application/vnd.melarecipe
 ```
 
@@ -31,7 +31,7 @@ Content-Type: application/vnd.melarecipe
 
 ```bash
 curl -X POST \
-  http://<hubble-ip>:3000/api/modules/hubble-mela-recipe-viewer/receive \
+  http://<hubble-ip>:3000/api/modules/hubble-recipe-viewer/receive \
   -H "Content-Type: application/vnd.melarecipe" \
   -d @"Black pepper beef stir-fry.melarecipe"
 ```
@@ -43,7 +43,7 @@ Mela can share recipes via the iOS share sheet, which can trigger Shortcuts. To 
 1. Open the **Shortcuts** app on your iPhone.
 2. Create a new shortcut and name it something like "Send to Hubble."
 3. Add a **Get Contents of URL** action:
-   - **URL:** `http://<hubble-ip>:3000/api/modules/hubble-mela-recipe-viewer/receive`
+   - **URL:** `http://<hubble-ip>:3000/api/modules/hubble-recipe-viewer/receive`
    - **Method:** POST
    - **Headers:** add `Content-Type` = `application/vnd.melarecipe`
    - **Request Body:** set to **File** and use the **Shortcut Input** variable
@@ -101,7 +101,7 @@ Send as many recipes as you want -- they all load into the widget. Use B4 to swi
 
 Receives a recipe from the Mela app.
 
-**URL:** `http://<hubble-ip>:3000/api/modules/hubble-mela-recipe-viewer/receive`
+**URL:** `http://<hubble-ip>:3000/api/modules/hubble-recipe-viewer/receive`
 
 **Content-Type:** `application/vnd.melarecipe`
 

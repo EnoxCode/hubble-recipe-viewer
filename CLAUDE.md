@@ -9,7 +9,7 @@ This is a Hubble module (type: **connector + visualization**). Hubble is an Elec
 ## Structure
 
 ```
-hubble-mela-recipe-viewer/
+hubble-recipe-viewer/
 ├── manifest.json                         # Module metadata, properties, dependencies
 ├── connector/
 │   └── index.ts                          # Server-side: data fetching, scheduling, emit
@@ -255,7 +255,7 @@ sdk.onApiCall(async ({ action, body }) => {
 ```ts
 // Requires oauth: { provider: 'google', scopes: [...] } in manifest.json
 if (!sdk.oauth.isAuthorized()) {
-  sdk.emit('hubble-mela-recipe-viewer:data', { error: 'Not authorized' });
+  sdk.emit('hubble-recipe-viewer:data', { error: 'Not authorized' });
   return;
 }
 const token = sdk.oauth.getAccessToken();   // string | null
@@ -269,9 +269,9 @@ import { useConnectorData, useWidgetConfig, useWidgetState, useHubbleSDK } from 
 
 // Subscribe to connector data — auto re-renders
 // IMPORTANT: with no args, subscribes to '{module-name}:data' topic.
-// Your connector MUST emit to that exact topic: sdk.emit('hubble-mela-recipe-viewer:data', ...)
+// Your connector MUST emit to that exact topic: sdk.emit('hubble-recipe-viewer:data', ...)
 // If you emit to a different topic (e.g. ':state'), pass args explicitly:
-//   useConnectorData<MyData>('hubble-mela-recipe-viewer', 'hubble-mela-recipe-viewer:state')
+//   useConnectorData<MyData>('hubble-recipe-viewer', 'hubble-recipe-viewer:state')
 const data = useConnectorData<MyData>();
 
 // Read widget config (from manifest properties)

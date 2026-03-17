@@ -1,5 +1,5 @@
 {
-  "name": "hubble-mela-recipe-viewer",
+  "name": "hubble-recipe-viewer",
   "version": "0.1.0",
   "description": "A viewer for the mela recipe format",
   "minAppVersion": "0.1.0",

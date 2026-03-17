@@ -84,7 +84,7 @@ describe('connector/index', () => {
 
   it('emits initial empty recipes on load', () => {
     connector(mockSdk as never);
-    expect(mockSdk.emit).toHaveBeenCalledWith('hubble-mela-recipe-viewer:data', {
+    expect(mockSdk.emit).toHaveBeenCalledWith('hubble-recipe-viewer:data', {
       recipes: {},
     });
   });
@@ -127,7 +127,7 @@ describe('connector/index', () => {
       // Wait for async processing to complete
       await vi.waitFor(() => {
         const emitCalls = mockSdk.emit.mock.calls.filter(
-          (c: unknown[]) => c[0] === 'hubble-mela-recipe-viewer:data',
+          (c: unknown[]) => c[0] === 'hubble-recipe-viewer:data',
         );
         expect(emitCalls.length).toBeGreaterThanOrEqual(3);
 
@@ -156,7 +156,7 @@ describe('connector/index', () => {
       expect(result).toEqual({ ok: true, id: 'recipe-456' });
 
       const emitCalls = mockSdk.emit.mock.calls.filter(
-        (c: unknown[]) => c[0] === 'hubble-mela-recipe-viewer:data',
+        (c: unknown[]) => c[0] === 'hubble-recipe-viewer:data',
       );
       const lastEmit = emitCalls[emitCalls.length - 1][1] as { recipes: Record<string, { status: string; error?: string }> };
       expect(lastEmit.recipes['recipe-456'].status).toBe('error');
@@ -178,7 +178,7 @@ describe('connector/index', () => {
 
       await vi.waitFor(() => {
         const emitCalls = mockSdk.emit.mock.calls.filter(
-          (c: unknown[]) => c[0] === 'hubble-mela-recipe-viewer:data',
+          (c: unknown[]) => c[0] === 'hubble-recipe-viewer:data',
         );
         const lastEmit = emitCalls[emitCalls.length - 1][1] as { recipes: Record<string, { status: string }> };
         expect(lastEmit.recipes['recipe-789'].status).toBe('error');
