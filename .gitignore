@@ -1,0 +1,24 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# macOS
+.DS_Store
+
+# Environment
+.env
+.env.local
+
+# IDE
+.vscode/
+.idea/
+
+# Auto-generated AI context (regenerate with: create-hubble-module sync-docs)
+EXAMPLES.md
+hubble-sdk.d.ts
+hubble-ui.d.ts
+hubble-dash-ui.d.ts
+
+.superpowers/
