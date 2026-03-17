@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useConnectorData, useHubbleSDK } from '@hubble/sdk';
 import type { RecipeViewerData } from './types';
 import { useRecipeNavigation } from './hooks/useRecipeNavigation';
@@ -17,19 +17,23 @@ const HubbleMelaRecipeViewerViz = () => {
   const sdk = useHubbleSDK();
   const nav = useRecipeNavigation(data);
 
-  // Wire hardware buttons
+  // Use ref so button handlers always call the latest handleButton
+  const handleButtonRef = useRef(nav.handleButton);
+  handleButtonRef.current = nav.handleButton;
+
+  // Wire hardware buttons — only re-register when sdk changes (once)
   useEffect(() => {
-    const unsub1 = sdk.onButton('button1', () => nav.handleButton('primary'));
-    const unsub2 = sdk.onButton('button2', () => nav.handleButton('back'));
-    const unsub3 = sdk.onButton('button3', () => nav.handleButton('contextual'));
-    const unsub4 = sdk.onButton('button4', () => nav.handleButton('switch'));
+    const unsub1 = sdk.onButton('button1', () => handleButtonRef.current('primary'));
+    const unsub2 = sdk.onButton('button2', () => handleButtonRef.current('back'));
+    const unsub3 = sdk.onButton('button3', () => handleButtonRef.current('contextual'));
+    const unsub4 = sdk.onButton('button4', () => handleButtonRef.current('switch'));
     return () => {
       unsub1();
       unsub2();
       unsub3();
       unsub4();
     };
-  }, [sdk, nav.handleButton]);
+  }, [sdk]);
 
   // Handle pending timer
   useEffect(() => {

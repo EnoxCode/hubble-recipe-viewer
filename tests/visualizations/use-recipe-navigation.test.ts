@@ -88,13 +88,14 @@ describe('useRecipeNavigation', () => {
     expect(result.current.phase).toBe('gathering');
     expect(result.current.gatheredIds.size).toBe(0);
 
-    // Toggle ingredient at cursor (index 0 = ing-1)
+    // Toggle ingredient at cursor (index 0 = ing-1) — cursor auto-advances to next unchecked
     act(() => result.current.handleButton('contextual'));
     expect(result.current.gatheredIds.has('ing-1')).toBe(true);
+    expect(result.current.gatherCursorIndex).toBe(1); // auto-advanced
 
-    // Toggle again to uncheck
+    // Toggle second ingredient (now at cursor)
     act(() => result.current.handleButton('contextual'));
-    expect(result.current.gatheredIds.has('ing-1')).toBe(false);
+    expect(result.current.gatheredIds.has('ing-2')).toBe(true);
   });
 
   it('B1 in gathering advances cursor to next unchecked', () => {

@@ -184,8 +184,8 @@
 }
 
 .rcp-check-icon--gathered {
-  width: 8px;
-  height: 8px;
+  font-size: 9px;
+  line-height: 1;
   color: var(--dash-state-info);
 }
 
@@ -195,8 +195,8 @@
 }
 
 .rcp-check-icon--used {
-  width: 8px;
-  height: 8px;
+  font-size: 9px;
+  line-height: 1;
   color: var(--dash-state-positive);
 }
 

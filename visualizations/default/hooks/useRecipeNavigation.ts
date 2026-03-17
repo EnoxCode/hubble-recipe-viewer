@@ -178,7 +178,7 @@ export function useRecipeNavigation(data: RecipeViewerData | null) {
           const nonRef = getNonRefIngredients(recipe);
 
           if (action === 'contextual') {
-            // Toggle ingredient at cursor
+            // Toggle ingredient at cursor, then advance to next unchecked
             const ing = nonRef[rs.gatherCursorIndex];
             if (!ing) return prev;
             const gathered = new Set(rs.gatheredIngredientIds);
@@ -187,7 +187,23 @@ export function useRecipeNavigation(data: RecipeViewerData | null) {
             } else {
               gathered.add(ing.id);
             }
-            return updateRecipe({ gatheredIngredientIds: [...gathered] });
+
+            // Auto-advance cursor to next unchecked ingredient
+            let nextCursor = rs.gatherCursorIndex + 1;
+            while (nextCursor < nonRef.length && gathered.has(nonRef[nextCursor].id)) {
+              nextCursor++;
+            }
+            if (nextCursor >= nonRef.length) {
+              // Wrap around
+              nextCursor = 0;
+              while (nextCursor < nonRef.length && gathered.has(nonRef[nextCursor].id)) {
+                nextCursor++;
+              }
+            }
+            // If all gathered, stay on last
+            if (nextCursor >= nonRef.length) nextCursor = rs.gatherCursorIndex;
+
+            return updateRecipe({ gatheredIngredientIds: [...gathered], gatherCursorIndex: nextCursor });
           }
 
           if (action === 'primary') {
