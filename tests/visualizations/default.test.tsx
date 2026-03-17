@@ -50,18 +50,12 @@ describe('DonePanel', () => {
 });
 
 describe('Callout', () => {
-  const types = [
-    { type: 'timer' as const, icon: '⏱' },
-    { type: 'technique' as const, icon: '🔪' },
-    { type: 'temp' as const, icon: '🔥' },
-    { type: 'equip' as const, icon: '🍳' },
-    { type: 'tip' as const, icon: '💡' },
-  ];
+  const types = ['timer', 'technique', 'temp', 'equip', 'tip'] as const;
 
-  it.each(types)('renders $type callout with correct icon and text', ({ type, icon }) => {
+  it.each(types)('renders %s callout with icon and text', (type) => {
     const { container } = render(<Callout type={type} title={`${type} title`} />);
     expect(screen.getByText(`${type} title`)).toBeInTheDocument();
-    expect(screen.getByText(icon)).toBeInTheDocument();
+    expect(container.querySelector('.rcp-callout-icon svg')).toBeInTheDocument();
     expect(container.querySelector(`.rcp-callout--${type}`)).toBeInTheDocument();
   });
 

@@ -1,4 +1,6 @@
 import React from 'react';
+import { mdiBrain } from '@mdi/js';
+import { Icon } from './Icon';
 
 export function ProcessingState({ title }: { title: string }) {
   return (
@@ -8,7 +10,7 @@ export function ProcessingState({ title }: { title: string }) {
           <circle className="rcp-spinner-track" cx="20" cy="20" r="16" fill="none" strokeWidth="2" />
           <circle className="rcp-spinner-arc" cx="20" cy="20" r="16" fill="none" strokeWidth="2" strokeLinecap="round" />
         </svg>
-        <span className="rcp-spinner-icon">🧠</span>
+        <span className="rcp-spinner-icon"><Icon path={mdiBrain} /></span>
       </div>
       <div className="rcp-processing-title">{title}</div>
       <div className="rcp-processing-sub">AI is extracting steps, timers, and tips…</div>

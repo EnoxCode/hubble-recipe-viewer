@@ -1,5 +1,7 @@
 import React, { useEffect, useRef } from 'react';
+import { mdiFlash } from '@mdi/js';
 import { useConnectorData, useHubbleSDK } from '@hubble/sdk';
+import { Icon } from './components/Icon';
 import type { RecipeViewerData } from './types';
 import { useRecipeNavigation } from './hooks/useRecipeNavigation';
 import { EmptyState } from './components/EmptyState';
@@ -80,7 +82,7 @@ const HubbleMelaRecipeViewerViz = () => {
     return (
       <div className="rcp-widget-single">
         <div className="rcp-empty">
-          <div className="rcp-empty-icon">&#9889;</div>
+          <div className="rcp-empty-icon"><Icon path={mdiFlash} /></div>
           <div className="rcp-empty-text">{activeRecipe.error || 'Unknown error'}</div>
         </div>
       </div>
