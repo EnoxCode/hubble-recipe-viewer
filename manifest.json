@@ -12,7 +12,8 @@
       "name": "receive",
       "method": "POST",
       "path": "/receive",
-      "description": "Receive a recipe from Mela app"
+      "description": "Receive a recipe from Mela app",
+      "contentType": "application/vnd.melarecipe"
     }
   ],
   "properties": [
