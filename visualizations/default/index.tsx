@@ -38,7 +38,7 @@ const HubbleMelaRecipeViewerViz = () => {
   // Handle pending timer
   useEffect(() => {
     if (nav.pendingTimer) {
-      sdk.callApi('start-available', {
+      sdk.callApi('start-timer', {
         duration: nav.pendingTimer.durationSeconds,
         label: nav.pendingTimer.label,
       });
