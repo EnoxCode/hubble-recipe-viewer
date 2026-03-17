@@ -1,0 +1,567 @@
+/* HubbleMelaRecipeViewer — dashboard visualization styles */
+/* Uses --dash-* CSS variables from hubble-dash-ui */
+
+/* ─── Layout ─── */
+
+.rcp-widget {
+  background: rgba(var(--dash-tint-r), var(--dash-tint-g), var(--dash-tint-b), var(--dash-panel-opacity));
+  backdrop-filter: blur(var(--dash-panel-blur));
+  -webkit-backdrop-filter: blur(var(--dash-panel-blur));
+  border-radius: var(--dash-radius);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  height: 100%;
+}
+
+.rcp-widget-single {
+  background: rgba(var(--dash-tint-r), var(--dash-tint-g), var(--dash-tint-b), var(--dash-panel-opacity));
+  backdrop-filter: blur(var(--dash-panel-blur));
+  -webkit-backdrop-filter: blur(var(--dash-panel-blur));
+  border-radius: var(--dash-radius);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.rcp-layout {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  min-height: 0;
+}
+
+.rcp-left {
+  width: 300px;
+  flex-shrink: 0;
+  border-right: 1px solid var(--dash-divider);
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.rcp-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* ─── Image ─── */
+
+.rcp-image-wrap {
+  position: relative;
+  aspect-ratio: 16 / 7;
+  background: rgba(0, 0, 0, 0.30);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.rcp-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.rcp-image-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.65));
+  padding: 24px 14px 10px;
+}
+
+.rcp-image-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.95);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+.rcp-image-meta {
+  display: flex;
+  gap: 5px;
+  font-size: 9px;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+/* ─── Ingredients ─── */
+
+.rcp-ingredients {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.rcp-ingredients::-webkit-scrollbar {
+  width: 3px;
+}
+
+.rcp-ingredients::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.rcp-ingredients::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.10);
+  border-radius: 3px;
+}
+
+.rcp-group {
+  padding: var(--dash-gap) 14px 3px;
+}
+
+.rcp-group:first-child {
+  padding-top: var(--dash-gap-sm);
+}
+
+.rcp-group-collapsed {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 14px;
+  opacity: 0.35;
+}
+
+.rcp-group-collapsed-count {
+  font-size: 8px;
+  color: var(--dash-state-positive);
+}
+
+.rcp-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 14px;
+  border-left: 2px solid transparent;
+  transition: background 0.15s, border-left-color 0.15s, opacity 0.15s;
+}
+
+.rcp-row--active {
+  background: rgba(96, 165, 250, 0.10);
+  border-left-color: var(--dash-state-info);
+}
+
+.rcp-row--active .rcp-row-name {
+  color: var(--dash-text-primary);
+}
+
+.rcp-row--checked {
+  opacity: 0.25;
+}
+
+.rcp-row--checked .rcp-row-name {
+  text-decoration: line-through;
+}
+
+.rcp-row--focused {
+  background: rgba(255, 255, 255, 0.06);
+  border-left-color: var(--dash-state-info);
+}
+
+.rcp-check {
+  width: 13px;
+  height: 13px;
+  border-radius: 3px;
+  border: 1.5px solid rgba(255, 255, 255, 0.15);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.rcp-row--active .rcp-check {
+  border-color: rgba(96, 165, 250, 0.4);
+}
+
+.rcp-check--gathered {
+  border-color: rgba(96, 165, 250, 0.4);
+  background: rgba(96, 165, 250, 0.12);
+}
+
+.rcp-check-icon--gathered {
+  width: 8px;
+  height: 8px;
+  color: var(--dash-state-info);
+}
+
+.rcp-check--used {
+  border-color: rgba(74, 222, 128, 0.35);
+  background: rgba(74, 222, 128, 0.12);
+}
+
+.rcp-check-icon--used {
+  width: 8px;
+  height: 8px;
+  color: var(--dash-state-positive);
+}
+
+.rcp-row-name {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--dash-text-secondary);
+  transition: color 0.15s;
+}
+
+/* ─── Steps ─── */
+
+.rcp-step-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--dash-divider);
+}
+
+.rcp-step-nav-left {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.rcp-dots {
+  display: flex;
+  gap: 5px;
+}
+
+.rcp-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.20);
+  transition: width 0.15s, border-radius 0.15s, background 0.15s;
+}
+
+.rcp-dot--active {
+  width: 14px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.60);
+}
+
+.rcp-dot--done {
+  background: rgba(74, 222, 128, 0.4);
+}
+
+.rcp-progress {
+  height: 2px;
+  background: rgba(255, 255, 255, 0.06);
+  margin: 0 16px;
+}
+
+.rcp-progress-fill {
+  height: 100%;
+  background: var(--dash-state-info);
+  opacity: 0.6;
+  transition: width 0.15s;
+}
+
+.rcp-step-body {
+  flex: 1;
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.rcp-step-body::-webkit-scrollbar {
+  width: 3px;
+}
+
+.rcp-step-body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.rcp-step-body::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.10);
+  border-radius: 3px;
+}
+
+.rcp-prev-step {
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--dash-text-muted);
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--dash-divider);
+}
+
+.rcp-step-text {
+  font-size: 18px;
+  font-weight: 300;
+  color: var(--dash-text-primary);
+  line-height: 1.6;
+  letter-spacing: -0.3px;
+}
+
+.rcp-step-hint {
+  color: var(--dash-text-secondary);
+}
+
+/* ─── Callouts ─── */
+
+.rcp-callouts {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.rcp-callout {
+  padding: 7px 10px;
+  border-radius: 6px;
+  border-left: 3px solid transparent;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.rcp-callout--timer {
+  border-left-color: var(--dash-state-warning);
+  background: rgba(251, 191, 36, 0.09);
+}
+
+.rcp-callout--technique {
+  border-left-color: var(--dash-state-info);
+  background: rgba(96, 165, 250, 0.08);
+}
+
+.rcp-callout--temp {
+  border-left-color: var(--dash-state-critical);
+  background: rgba(248, 113, 113, 0.08);
+}
+
+.rcp-callout--equip {
+  border-left-color: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.rcp-callout--tip {
+  border-left-color: var(--dash-state-positive);
+  background: rgba(74, 222, 128, 0.07);
+}
+
+.rcp-callout-icon {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+.rcp-callout-title {
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.rcp-callout--timer .rcp-callout-title {
+  color: var(--dash-state-warning);
+}
+
+.rcp-callout--technique .rcp-callout-title {
+  color: var(--dash-state-info);
+}
+
+.rcp-callout--temp .rcp-callout-title {
+  color: var(--dash-state-critical);
+}
+
+.rcp-callout--equip .rcp-callout-title {
+  color: var(--dash-text-secondary);
+}
+
+.rcp-callout--tip .rcp-callout-title {
+  color: var(--dash-state-positive);
+}
+
+.rcp-callout-sub {
+  font-size: 9px;
+  color: var(--dash-text-muted);
+}
+
+/* ─── Footer ─── */
+
+.rcp-footer {
+  border-top: 1px solid var(--dash-divider);
+}
+
+.rcp-footer-single {
+  display: flex;
+  justify-content: flex-end;
+  padding: 5px 16px;
+}
+
+.rcp-switcher {
+  display: flex;
+  gap: 3px;
+  padding: 5px 10px;
+  overflow-x: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.rcp-switcher::-webkit-scrollbar {
+  display: none;
+}
+
+.rcp-switch-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 8px;
+  border-radius: 5px;
+  transition: background 0.15s;
+  flex-shrink: 0;
+}
+
+.rcp-switch-item--active {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.rcp-switch-status {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.rcp-switch-status--waiting {
+  background: rgba(255, 255, 255, 0.20);
+}
+
+.rcp-switch-status--gathering {
+  background: var(--dash-state-info);
+}
+
+.rcp-switch-status--cooking {
+  background: var(--dash-state-warning);
+  box-shadow: 0 0 4px rgba(251, 191, 36, 0.5);
+}
+
+.rcp-switch-status--done {
+  background: var(--dash-state-positive);
+}
+
+.rcp-switch-name {
+  font-size: 9px;
+  font-weight: 400;
+  color: var(--dash-text-muted);
+  transition: color 0.15s, font-weight 0.15s;
+}
+
+.rcp-switch-item--active .rcp-switch-name {
+  color: var(--dash-text-primary);
+  font-weight: 500;
+}
+
+.rcp-switch-progress {
+  font-size: 7px;
+  color: var(--dash-text-muted);
+}
+
+/* ─── State views ─── */
+
+.rcp-overview {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 18px;
+}
+
+.rcp-overview-row {
+  display: flex;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 6px;
+}
+
+.rcp-overview-name {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--dash-text-primary);
+  flex: 1;
+}
+
+.rcp-overview-steps {
+  font-size: 10px;
+  color: var(--dash-text-muted);
+}
+
+.rcp-notes {
+  padding: 10px 18px;
+  border-top: 1px solid var(--dash-divider);
+}
+
+.rcp-notes-text {
+  font-size: 11px;
+  font-weight: 300;
+  color: var(--dash-text-secondary);
+  line-height: 1.6;
+}
+
+.rcp-done {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 24px 20px;
+}
+
+.rcp-done-icon {
+  width: 32px;
+  height: 32px;
+  opacity: 0.6;
+}
+
+.rcp-done-title {
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--dash-text-primary);
+}
+
+.rcp-done-sub {
+  font-size: 10px;
+  color: var(--dash-text-muted);
+}
+
+.rcp-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 40px 20px;
+}
+
+.rcp-empty-icon {
+  width: 28px;
+  height: 28px;
+  opacity: 0.15;
+}
+
+.rcp-empty-text {
+  font-size: 11px;
+  color: var(--dash-text-muted);
+}
+
+.rcp-empty-sub {
+  font-size: 8px;
+  color: var(--dash-text-muted);
+}
+
+/* ─── Typography helpers ─── */
+
+.label-text {
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--dash-text-muted);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.muted-text {
+  font-size: 8px;
+  color: var(--dash-text-muted);
+}
