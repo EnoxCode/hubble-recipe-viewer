@@ -1,0 +1,49 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version_bump:
+        description: 'Version bump type'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm install
+      - name: Bump version
+        id: bump
+        run: node .github/scripts/bump-version.mjs ${{ github.event.inputs.version_bump }} >> $GITHUB_OUTPUT
+      - run: npm run build
+      - name: Create ZIP
+        run: cd dist && zip -r "../${{ steps.bump.outputs.MODULE_NAME }}-${{ steps.bump.outputs.NEW_VERSION }}.zip" .
+      - name: Commit and tag
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add manifest.json package.json
+          git commit -m "chore: bump version to ${{ steps.bump.outputs.NEW_VERSION }}"
+          git tag "v${{ steps.bump.outputs.NEW_VERSION }}"
+          git push origin HEAD --tags
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.bump.outputs.NEW_VERSION }}
+          name: v${{ steps.bump.outputs.NEW_VERSION }}
+          generate_release_notes: true
+          files: ${{ steps.bump.outputs.MODULE_NAME }}-${{ steps.bump.outputs.NEW_VERSION }}.zip
