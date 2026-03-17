@@ -97,11 +97,18 @@ export async function processRecipeWithAI(input: ProcessRecipeInput): Promise<Pr
     throw new Error('Claude response contained no text block');
   }
 
+  // Strip markdown code fences if Claude wraps the JSON in ```json ... ```
+  let jsonText = textBlock.text.trim();
+  const fenceMatch = jsonText.match(/^```(?:json)?\s*\n?([\s\S]*?)\n?\s*```$/);
+  if (fenceMatch) {
+    jsonText = fenceMatch[1].trim();
+  }
+
   let parsed: unknown;
   try {
-    parsed = JSON.parse(textBlock.text);
+    parsed = JSON.parse(jsonText);
   } catch {
-    throw new Error(`Failed to parse Claude response as JSON: ${textBlock.text.slice(0, 200)}`);
+    throw new Error(`Failed to parse Claude response as JSON: ${jsonText.slice(0, 200)}`);
   }
 
   if (
