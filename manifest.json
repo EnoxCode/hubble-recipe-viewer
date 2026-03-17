@@ -1,6 +1,6 @@
 {
   "name": "hubble-recipe-viewer",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A viewer for the mela recipe format",
   "minAppVersion": "0.1.0",
   "type": [
