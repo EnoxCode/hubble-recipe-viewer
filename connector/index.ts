@@ -116,24 +116,6 @@ export default function connector(sdk: ServerSdk) {
         return { ok: true, id };
       }
 
-      case 'start-timer': {
-        const timerBody = body as { duration?: number; label?: string };
-        if (!timerBody?.duration || !timerBody?.label) {
-          return { error: 'Missing duration or label' };
-        }
-        try {
-          const result = await sdk.http.post(
-            'http://localhost:3000/api/module/hubble-timer/api/start-available',
-            { duration: timerBody.duration, label: timerBody.label },
-          );
-          return result;
-        } catch (err) {
-          sdk.log.warn(`Timer start failed: ${err}`);
-          sdk.notify('All timers are busy', { level: 'warn' });
-          return { ok: false, error: 'Timer unavailable' };
-        }
-      }
-
       default:
         return { error: `Unknown action: ${action}` };
     }

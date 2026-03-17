@@ -1,4 +1,4 @@
-# HubbleMelaRecipeViewer
+# HubbleRecipeViewer
 
 A viewer for the mela recipe format
 

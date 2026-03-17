@@ -14,13 +14,6 @@
       "path": "/receive",
       "description": "Receive a recipe from Mela app",
       "contentType": "application/vnd.melarecipe"
-    },
-    {
-      "name": "start-timer",
-      "method": "POST",
-      "path": "/start-timer",
-      "description": "Start a timer on the first available timer widget",
-      "public": true
     }
   ],
   "properties": [

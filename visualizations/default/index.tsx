@@ -17,6 +17,10 @@ import './style.css';
 const HubbleMelaRecipeViewerViz = () => {
   const data = useConnectorData<RecipeViewerData>();
   const sdk = useHubbleSDK();
+
+  // DEBUG: trace what useConnectorData returns
+  console.debug('[RecipeViewer] useConnectorData returned:', data === null ? 'null' : `recipes=${Object.keys(data?.recipes || {}).length}`);
+
   const nav = useRecipeNavigation(data);
 
   // Use ref so button handlers always call the latest handleButton
@@ -40,10 +44,10 @@ const HubbleMelaRecipeViewerViz = () => {
   // Handle pending timer
   useEffect(() => {
     if (nav.pendingTimer) {
-      sdk.callApi('start-timer', {
+      sdk.callApi('start-available', {
         duration: nav.pendingTimer.durationSeconds,
         label: nav.pendingTimer.label,
-      });
+      }, 'hubble-timer');
       nav.clearPendingTimer();
     }
   }, [nav.pendingTimer, nav.clearPendingTimer, sdk]);
