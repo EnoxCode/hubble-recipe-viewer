@@ -22,15 +22,29 @@ Designed for the top half of a portrait 1920×1080 Cooking page. Full width, hal
 ```
 Mela app → POST /api/modules/hubble-mela-recipe-viewer/receive
          → Connector receives raw mela JSON
+         → Emits { status: 'processing', title } immediately
          → Strips image, sends to Claude API for processing
-         → Stores processed recipe + original image via sdk.storage
-         → Emits processed recipe to visualization
+         → On success: stores processed recipe in memory, emits full data
+         → On failure: emits { status: 'error', title, error } + sdk.log.error
          → Visualization renders two-panel cooking UI
 ```
 
 ### Module Type
 
 Hybrid — connector (API endpoint + AI processing) + visualization (React dashboard widget).
+
+### Manifest Endpoints
+
+```json
+"endpoints": [
+  {
+    "name": "receive",
+    "method": "POST",
+    "path": "/receive",
+    "description": "Receive a recipe from Mela app"
+  }
+]
+```
 
 ---
 
@@ -57,11 +71,13 @@ Before AI processing, parse the structured text patterns:
 
 ### AI Processing (Claude API)
 
-**When:** On receive. By the time the user walks to the Raspberry Pi, the recipe is processed and ready.
+**When:** On receive. Connector emits `{ status: 'processing', title }` immediately so the visualization can show a loading state. By the time the user walks to the Raspberry Pi, the recipe is typically processed and ready.
 
 **Input:** Mela JSON with `images` field stripped to reduce tokens. Include `title`, `ingredients` (pre-parsed groups), `instructions` (pre-parsed groups), `notes`, `yield`, `prepTime`, `cookTime`, `totalTime`.
 
 **Single prompt, structured output.** One API call returns the full processed recipe.
+
+**Error handling:** If the Claude API call fails (rate limit, network, malformed response), the connector emits `{ status: 'error', title, error: message }` and logs via `sdk.log.error`. The visualization shows an error state with the recipe title. No automatic retry — the user can re-send from Mela.
 
 **AI tasks:**
 
@@ -87,14 +103,16 @@ Before AI processing, parse the structured text patterns:
 ```ts
 interface ProcessedRecipe {
   id: string;                    // from mela id field
+  status: 'processing' | 'ready' | 'error';
   title: string;
-  image: string;                 // base64, stored separately from AI payload
+  image: string;                 // base64 from first item in mela images array
   servings: string;
   prepTime: string;
   cookTime: string;
   totalTime: string;
   notes: string;                 // original notes text for overview display
   groups: ProcessedGroup[];
+  error?: string;                // error message if status === 'error'
 }
 
 interface ProcessedGroup {
@@ -129,10 +147,9 @@ interface ProcessedTimer {
 
 ### Storage
 
-- Processed recipes stored via `sdk.storage.collection('recipes')`.
+- Processed recipes held in a module-scoped `Map<string, ProcessedRecipe>` in the connector. Not persisted to disk — recipes are ephemeral and re-sent from Mela if needed.
 - Each recipe keyed by its mela `id`.
-- Not persistent across reboots (no `sdk.storage` persistence needed — recipes re-sent from Mela).
-- Image stored alongside the processed data, not sent to AI.
+- Image (first item from mela `images` array) stored on the `ProcessedRecipe` object, not sent to AI.
 
 ### Emit
 
@@ -146,7 +163,7 @@ Connector emits to `hubble-mela-recipe-viewer:data` with the full list of proces
 
 **Full — glass panel, no header (image replaces it), footer with recipe switcher.**
 
-The widget uses a custom two-panel layout inside a single `.gw` glass panel. No `DashWidgetHeader` — the recipe image with overlaid title serves as the header. Footer is the recipe switcher bar.
+The widget uses a custom two-panel layout inside a single `dash-glass` panel. No `DashWidgetHeader` — the recipe image with overlaid title serves as the header. Footer is the recipe switcher bar.
 
 ### Layout
 
@@ -281,13 +298,17 @@ Each recipe maintains independent state (current step, checked ingredients, phas
 | State | B1 (Primary) | B2 (Back) | B3 (Contextual) | B4 (Switch) |
 |---|---|---|---|---|
 | **Waiting** | Start gather | — | — | Switch recipe |
-| **Gathering** | Start cooking | — | Toggle gather check | Switch recipe |
+| **Gathering** | Next ingredient / Start cooking | — | Toggle gather check | Switch recipe |
 | **Cooking** | Next step | Prev step | — | Switch recipe |
 | **Cooking + timer** | Next step | Prev step | Start timer | Switch recipe |
 | **Cooking step 1** | Next step | Back to overview | — | Switch recipe |
 | **Done** | — | Back to last step | Dismiss recipe | Switch recipe |
 
 **B1** is always the primary forward action. **B2** goes back (disabled when there's nothing to go back to). **B3** is contextual: gather check during overview, start timer during cooking when a timer callout is present, dismiss recipe when done. **B4** cycles through loaded recipes (no-op with single recipe).
+
+**Gather check targeting:** During the gathering phase, the ingredient list has a focus cursor (highlighted row). B3 toggles the focused ingredient's check. B1 moves the cursor to the next unchecked ingredient (skipping checked ones). When all ingredients are checked, B1 transitions to cooking mode. This repurposes B1/B3 during gather: B1 = advance cursor, B3 = toggle check. B2 remains disabled.
+
+**Dismiss behavior:** B3 in Done state removes the recipe from the in-memory recipe map and the switcher. If it was the last recipe, the widget returns to the empty state.
 
 **Manifest `hardwareButtons`:**
 ```json
@@ -312,7 +333,7 @@ The `hubble-timer` module exposes `start`, `pause`, `resume`, `reset` actions vi
 **New action on the timer module:** `start-available`
 
 ```ts
-// Request
+// Request — duration in SECONDS (timer module converts internally)
 { action: 'start-available', body: { duration: 600, label: 'Rest marinade' } }
 
 // Response (success)
@@ -322,9 +343,11 @@ The `hubble-timer` module exposes `start`, `pause`, `resume`, `reset` actions vi
 { ok: false, error: 'all-busy' }
 ```
 
-The timer module finds the first idle timer and starts it. The recipe module doesn't need to know about slugs or track timer state. If all timers are busy, the recipe module can show a brief notification or mark the callout as "timers full."
+The timer module finds the first idle timer and starts it. The recipe module doesn't need to know about slugs or track timer state. If all timers are busy, the recipe module shows a brief notification via `sdk.notify`.
 
 **Why not use existing `start`?** The recipe module would need to know which slugs exist and which are idle — that's timer state management leaking into the recipe module. `start-available` keeps the separation clean.
+
+**Note:** The timer module's existing API uses seconds for duration. The `start-available` endpoint follows the same convention. Verify the timer module's internal implementation matches (convert to ms internally if needed).
 
 ---
 
