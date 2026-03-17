@@ -3,12 +3,20 @@
 
 /* ─── Layout ─── */
 
-/* Force the Hubble widget container to fill its dropzone height */
+/* Force the Hubble widget container chain to fill its dropzone height */
 .module_container:has(.rcp-widget),
 .module_container:has(.rcp-widget-single) {
   height: 100%;
   display: flex;
   flex-direction: column;
+}
+
+.module_container:has(.rcp-widget) > .module-renderer,
+.module_container:has(.rcp-widget-single) > .module-renderer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
 }
 
 .rcp-widget {
@@ -599,16 +607,16 @@
 
 .rcp-processing-spinner {
   position: relative;
-  width: 48px;
-  height: 48px;
+  width: 144px;
+  height: 144px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .rcp-spinner-svg {
-  width: 48px;
-  height: 48px;
+  width: 144px;
+  height: 144px;
   animation: rcp-spin 2s linear infinite;
 }
 
@@ -626,7 +634,7 @@
 
 .rcp-spinner-icon {
   position: absolute;
-  font-size: 18px;
+  font-size: 54px;
   animation: rcp-pulse 2s ease-in-out infinite;
 }
 

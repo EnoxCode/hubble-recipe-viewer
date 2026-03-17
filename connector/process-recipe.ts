@@ -92,7 +92,7 @@ export async function processRecipeWithAI(input: ProcessRecipeInput): Promise<Pr
 
   const response = await client.messages.create({
     model: input.model,
-    max_tokens: 4096,
+    max_tokens: 16384,
     system: SYSTEM_PROMPT,
     messages: [{ role: 'user', content: userMessage }],
   });
