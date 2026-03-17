@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
+import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { EmptyState } from '../../visualizations/default/components/EmptyState';
 import { ProcessingState } from '../../visualizations/default/components/ProcessingState';
 import { DonePanel } from '../../visualizations/default/components/DonePanel';
@@ -8,6 +8,8 @@ import { Callout } from '../../visualizations/default/components/Callout';
 import { RecipeImage } from '../../visualizations/default/components/RecipeImage';
 import { RecipeSwitcher } from '../../visualizations/default/components/RecipeSwitcher';
 import type { ProcessedRecipe, RecipePhase } from '../../visualizations/default/types';
+import { useConnectorData, useHubbleSDK } from '@hubble/sdk';
+import HubbleMelaRecipeViewerViz from '../../visualizations/default/index';
 
 function makeRecipe(overrides: Partial<ProcessedRecipe> & { id: string; title: string }): ProcessedRecipe {
   return {
@@ -167,5 +169,143 @@ describe('RecipeSwitcher', () => {
     const activeItem = container.querySelector('.rcp-switch-item--active');
     expect(activeItem).toBeInTheDocument();
     expect(activeItem?.textContent).toContain('Soup');
+  });
+});
+
+// --- Integration tests for the main visualization component ---
+
+function makeTestRecipe(overrides: Partial<ProcessedRecipe> = {}): ProcessedRecipe {
+  return {
+    id: 'test-1',
+    status: 'ready',
+    title: 'Test Beef Stir-fry',
+    image: '',
+    servings: '2',
+    prepTime: '15min',
+    cookTime: '5min',
+    totalTime: '20min',
+    notes: 'Cut against the grain.',
+    groups: [{
+      name: 'Marinade',
+      ingredients: [
+        { id: '0-0', text: '350g flank steak', isReference: false },
+        { id: '0-1', text: '1 tsp cornstarch', isReference: false },
+      ],
+      steps: [{
+        text: 'Slice the beef into strips.',
+        linkedIngredientIds: ['0-0', '0-1'],
+        timers: [{ label: 'Rest marinade', durationSeconds: 600 }],
+        temperature: null,
+        equipment: ['mixing bowl'],
+        technique: 'Cut against the grain',
+        goodToKnow: null,
+      }],
+    }],
+    ...overrides,
+  };
+}
+
+describe('HubbleMelaRecipeViewerViz (integration)', () => {
+  beforeEach(() => {
+    vi.mocked(useHubbleSDK).mockReturnValue({
+      onButton: vi.fn(() => vi.fn()),
+      callApi: vi.fn(),
+      requestAcknowledge: vi.fn(),
+    } as any);
+    vi.mocked(useConnectorData).mockReturnValue(null);
+  });
+
+  it('renders empty state when no data', () => {
+    vi.mocked(useConnectorData).mockReturnValue(null);
+    render(<HubbleMelaRecipeViewerViz />);
+    expect(screen.getByText('Waiting for recipe…')).toBeInTheDocument();
+  });
+
+  it('renders empty state when data has no recipes', () => {
+    vi.mocked(useConnectorData).mockReturnValue({ recipes: {} });
+    render(<HubbleMelaRecipeViewerViz />);
+    expect(screen.getByText('Waiting for recipe…')).toBeInTheDocument();
+  });
+
+  it('renders processing state for processing recipe', () => {
+    const recipe = makeTestRecipe({ id: 'p1', status: 'processing', title: 'Slow Cooker Chili' });
+    vi.mocked(useConnectorData).mockReturnValue({ recipes: { p1: recipe } });
+    render(<HubbleMelaRecipeViewerViz />);
+    expect(screen.getByText('Processing recipe…')).toBeInTheDocument();
+    expect(screen.getByText('Slow Cooker Chili')).toBeInTheDocument();
+  });
+
+  it('renders error state for failed recipe', () => {
+    const recipe = makeTestRecipe({
+      id: 'e1',
+      status: 'error',
+      title: 'Bad Recipe',
+      error: 'Failed to parse ingredients',
+    });
+    vi.mocked(useConnectorData).mockReturnValue({ recipes: { e1: recipe } });
+    render(<HubbleMelaRecipeViewerViz />);
+    expect(screen.getByText('Failed to parse ingredients')).toBeInTheDocument();
+  });
+
+  it('renders recipe title and ingredients for ready recipe', () => {
+    const recipe = makeTestRecipe();
+    vi.mocked(useConnectorData).mockReturnValue({ recipes: { 'test-1': recipe } });
+    render(<HubbleMelaRecipeViewerViz />);
+    expect(screen.getByText('Test Beef Stir-fry')).toBeInTheDocument();
+    expect(screen.getByText('350g flank steak')).toBeInTheDocument();
+    expect(screen.getByText('1 tsp cornstarch')).toBeInTheDocument();
+  });
+
+  it('renders overview with group names', () => {
+    const recipe = makeTestRecipe({
+      groups: [
+        {
+          name: 'Marinade',
+          ingredients: [{ id: '0-0', text: '350g flank steak', isReference: false }],
+          steps: [{
+            text: 'Mix the marinade.',
+            linkedIngredientIds: ['0-0'],
+            timers: [],
+            temperature: null,
+            equipment: [],
+            technique: null,
+            goodToKnow: null,
+          }],
+        },
+        {
+          name: 'Stir-fry',
+          ingredients: [{ id: '1-0', text: '2 tbsp oil', isReference: false }],
+          steps: [
+            {
+              text: 'Heat the wok.',
+              linkedIngredientIds: ['1-0'],
+              timers: [],
+              temperature: null,
+              equipment: ['wok'],
+              technique: null,
+              goodToKnow: null,
+            },
+            {
+              text: 'Stir-fry the beef.',
+              linkedIngredientIds: ['1-0'],
+              timers: [],
+              temperature: null,
+              equipment: [],
+              technique: null,
+              goodToKnow: null,
+            },
+          ],
+        },
+      ],
+    });
+    vi.mocked(useConnectorData).mockReturnValue({ recipes: { 'test-1': recipe } });
+    render(<HubbleMelaRecipeViewerViz />);
+
+    // Overview panel shows group names (also appear in ingredient panel, so use getAllByText)
+    expect(screen.getAllByText('Marinade').length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText('Stir-fry').length).toBeGreaterThanOrEqual(1);
+    // Shows component and step counts
+    expect(screen.getByText(/2 components/)).toBeInTheDocument();
+    expect(screen.getByText(/3 steps/)).toBeInTheDocument();
   });
 });
