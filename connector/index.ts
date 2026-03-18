@@ -434,6 +434,7 @@ export default function connector(sdk: ServerSdk) {
         const ingredientGroups = parseMelaIngredients(mela.ingredients);
         const instructionGroups = parseMelaInstructions(mela.instructions);
 
+        const config = sdk.getConfig();
         const apiKey = config.anthropicApiKey as string | undefined;
 
         if (!apiKey) {
