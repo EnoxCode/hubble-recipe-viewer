@@ -1,6 +1,6 @@
 {
   "name": "hubble-recipe-viewer",
-  "version": "0.1.4",
+  "version": "0.2.0",
   "description": "A viewer for the mela recipe format",
   "minAppVersion": "0.1.2",
   "type": [
@@ -12,35 +12,92 @@
       "name": "recipe:ready",
       "description": "A recipe finished AI processing and is ready to cook",
       "payload": {
-        "recipeId": { "type": "string", "description": "Recipe identifier" },
-        "title": { "type": "string", "description": "Recipe title" }
+        "recipeId": {
+          "type": "string",
+          "description": "Recipe identifier"
+        },
+        "title": {
+          "type": "string",
+          "description": "Recipe title"
+        }
       }
     },
     {
       "name": "recipe:active-changed",
       "description": "The active recipe or its phase changed",
       "payload": {
-        "recipeId": { "type": "string", "description": "Recipe identifier" },
-        "title": { "type": "string", "description": "Recipe title" },
-        "phase": { "type": "string", "enum": ["waiting", "gathering", "cooking", "done"], "description": "Current navigation phase" },
-        "image": { "type": "string", "description": "Recipe image URL or base64 data" },
-        "servings": { "type": "string", "description": "Yield / servings" },
-        "totalTime": { "type": "string", "description": "Total cook time" }
+        "recipeId": {
+          "type": "string",
+          "description": "Recipe identifier"
+        },
+        "title": {
+          "type": "string",
+          "description": "Recipe title"
+        },
+        "phase": {
+          "type": "string",
+          "enum": [
+            "waiting",
+            "gathering",
+            "cooking",
+            "done"
+          ],
+          "description": "Current navigation phase"
+        },
+        "image": {
+          "type": "string",
+          "description": "Recipe image URL or base64 data"
+        },
+        "servings": {
+          "type": "string",
+          "description": "Yield / servings"
+        },
+        "totalTime": {
+          "type": "string",
+          "description": "Total cook time"
+        }
       }
     },
     {
       "name": "recipe:step-changed",
       "description": "The current cooking step changed",
       "payload": {
-        "recipeId": { "type": "string", "description": "Recipe identifier" },
-        "title": { "type": "string", "description": "Recipe title" },
-        "groupName": { "type": "string", "description": "Name of the current recipe group" },
-        "groupIndex": { "type": "number", "description": "Index of the current group" },
-        "stepIndex": { "type": "number", "description": "Index of the step within the group" },
-        "stepText": { "type": "string", "description": "Full instruction text for this step" },
-        "timers": { "type": "array", "description": "Timers attached to this step" },
-        "temperature": { "type": "string", "description": "Temperature mentioned in this step, or null" },
-        "equipment": { "type": "array", "description": "Equipment mentioned in this step" }
+        "recipeId": {
+          "type": "string",
+          "description": "Recipe identifier"
+        },
+        "title": {
+          "type": "string",
+          "description": "Recipe title"
+        },
+        "groupName": {
+          "type": "string",
+          "description": "Name of the current recipe group"
+        },
+        "groupIndex": {
+          "type": "number",
+          "description": "Index of the current group"
+        },
+        "stepIndex": {
+          "type": "number",
+          "description": "Index of the step within the group"
+        },
+        "stepText": {
+          "type": "string",
+          "description": "Full instruction text for this step"
+        },
+        "timers": {
+          "type": "array",
+          "description": "Timers attached to this step"
+        },
+        "temperature": {
+          "type": "string",
+          "description": "Temperature mentioned in this step, or null"
+        },
+        "equipment": {
+          "type": "array",
+          "description": "Equipment mentioned in this step"
+        }
       }
     }
   ],
@@ -96,23 +153,46 @@
       "querystring": {
         "type": "object",
         "properties": {
-          "id": { "type": "string", "description": "Recipe identifier returned by /receive" }
+          "id": {
+            "type": "string",
+            "description": "Recipe identifier returned by /receive"
+          }
         }
       },
       "response": {
         "200": {
           "type": "object",
           "properties": {
-            "id": { "type": "string" },
-            "status": { "type": "string" },
-            "title": { "type": "string" },
-            "image": { "type": "string" },
-            "servings": { "type": "string" },
-            "prepTime": { "type": "string" },
-            "cookTime": { "type": "string" },
-            "totalTime": { "type": "string" },
-            "notes": { "type": "string" },
-            "groups": { "type": "array" }
+            "id": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "image": {
+              "type": "string"
+            },
+            "servings": {
+              "type": "string"
+            },
+            "prepTime": {
+              "type": "string"
+            },
+            "cookTime": {
+              "type": "string"
+            },
+            "totalTime": {
+              "type": "string"
+            },
+            "notes": {
+              "type": "string"
+            },
+            "groups": {
+              "type": "array"
+            }
           }
         }
       }
