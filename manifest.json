@@ -131,6 +131,13 @@
       "required": false,
       "default": "claude-sonnet-4-6",
       "description": "Claude model to use for recipe processing"
+    },
+    {
+      "name": "autoSelectOnReceipt",
+      "type": "boolean",
+      "required": false,
+      "default": false,
+      "description": "Automatically select this widget when a new recipe is received"
     }
   ],
   "visualizations": [
