@@ -79,6 +79,8 @@ const mockSdk = {
   http: { get: vi.fn() },
   log: { info: vi.fn(), warn: vi.fn(), error: vi.fn() },
   getConfig: vi.fn(() => ({})),
+  getWidgetConfigs: vi.fn(() => []),
+  selectWidget: vi.fn(),
 };
 
 // Client SDK mock (in a vitest setup file or inline)
@@ -221,6 +223,8 @@ Only reference these directly when writing custom markup inside a panel.
 | `sdk.getConnectorState` | `(moduleName: string, topic?: string) => unknown \| null` | Read last emitted data from another connector |
 | `sdk.getDashboardState` | `() => DashboardState` | Get active page, screen status, page list |
 | `sdk.notify` | `(message: string, options?) => void` | Push notification to dashboard |
+| `sdk.getWidgetConfigs` | `() => ({ id: number } & Record<string, unknown>)[]` | Get config (including visualization-level properties) for every widget instance of this module |
+| `sdk.selectWidget` | `(widgetId: number \| null) => void` | Select a specific widget by its ID, or pass null to deselect |
 | `sdk.onApiCall` | `(handler: ({action, body}) => Promise<unknown>) => void` | Handle custom API endpoint calls |
 
 **`sdk.notify` options:**

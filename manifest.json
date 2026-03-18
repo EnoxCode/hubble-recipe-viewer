@@ -2,7 +2,7 @@
   "name": "hubble-recipe-viewer",
   "version": "0.1.4",
   "description": "A viewer for the mela recipe format",
-  "minAppVersion": "0.1.1",
+  "minAppVersion": "0.1.2",
   "type": [
     "connector",
     "visualization"
@@ -131,13 +131,6 @@
       "required": false,
       "default": "claude-sonnet-4-6",
       "description": "Claude model to use for recipe processing"
-    },
-    {
-      "name": "autoSelectOnReceipt",
-      "type": "boolean",
-      "required": false,
-      "default": false,
-      "description": "Automatically select this widget when a new recipe is received"
     }
   ],
   "visualizations": [
@@ -158,6 +151,13 @@
           "type": "string",
           "required": true,
           "description": "Widget title displayed in the edit interface"
+        },
+        {
+          "name": "autoSelectOnReceipt",
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "Automatically select this widget when a new recipe is received"
         }
       ]
     }

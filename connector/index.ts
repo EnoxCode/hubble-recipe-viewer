@@ -426,9 +426,9 @@ export default function connector(sdk: ServerSdk) {
 
         emitAll();
 
-        const config = sdk.getConfig();
-        if (config.autoSelectOnReceipt) {
-          sdk.selectWidget();
+        const widgetConfig = sdk.getWidgetConfigs().find((c) => c['autoSelectOnReceipt'] === true);
+        if (widgetConfig) {
+          sdk.selectWidget(widgetConfig.id);
         }
 
         const ingredientGroups = parseMelaIngredients(mela.ingredients);
