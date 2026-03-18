@@ -171,37 +171,34 @@ import { Button, IconButton, Input, Select, Slider, Toggle, ColorPicker, StatusD
 | `Field` | Form field wrapper with label and validation |
 | `Collapsible` | Expandable/collapsible section |
 
-### CSS variables
+### CSS variables (Studio — used by hubble-ui components)
 
-| Variable | Description |
-|---|---|
-| `--hubble-bg` | Page/window background color |
-| `--hubble-surface` | Surface color for elevated elements |
-| `--hubble-bg-gradient` | Background gradient (used on the dashboard) |
-| `--hubble-panel-bg` | Widget/panel background (semi-transparent) |
-| `--hubble-panel-border` | Widget/panel border color |
-| `--hubble-panel-blur` | Backdrop blur amount (e.g. `12px`) |
-| `--hubble-panel-shadow` | Widget/panel box shadow |
-| `--hubble-panel-subtle-bg` | Subtler panel background for nested sections |
-| `--hubble-panel-subtle-blur` | Backdrop blur for subtler panels |
-| `--hubble-text-primary` | Primary text color |
-| `--hubble-text-secondary` | Secondary/muted text color |
-| `--hubble-interactive-hover` | Background color on interactive element hover |
-| `--hubble-input-bg` | Input field background |
-| `--hubble-accent` | Primary accent/brand color |
-| `--hubble-accent-hover` | Accent color on hover |
-| `--hubble-danger` | Destructive action / error color |
-| `--hubble-success` | Success state color |
-| `--hubble-warning` | Warning state color |
-| `--hubble-radius-sm` | Small border radius |
-| `--hubble-radius-md` | Medium border radius |
-| `--hubble-radius-lg` | Large border radius |
-| `--hubble-radius-xl` | Extra-large border radius |
-| `--hubble-border` | Shorthand border declaration (width + style + color) |
-| `--hubble-font-family` | Base font family |
-| `--hubble-font-size-sm` | Small font size |
-| `--hubble-font-size-md` | Medium/base font size |
-| `--hubble-font-size-lg` | Large font size |
+Config panels live in Studio, so they use `--studio-*` variables automatically via the `hubble-ui` components.
+Only reference these directly when writing custom markup inside a panel.
+
+| Variable | Dark value | Description |
+|---|---|---|
+| `--studio-bg` | `#0d1117` | Page/app background |
+| `--studio-panel` | `#161b22` | Cards, sidebars, modals |
+| `--studio-panel-hover` | `#1c2128` | Panel hover state, input addons |
+| `--studio-border` | `#21262d` | Default border (inputs, cards) |
+| `--studio-border-subtle` | `#30363d` | Secondary borders, button outlines |
+| `--studio-text-primary` | `#e6edf3` | Body text, labels, headings |
+| `--studio-text-secondary` | `#8b949e` | Descriptions, placeholders, meta |
+| `--studio-text-tertiary` | `#484f58` | Disabled text, group headers, icons |
+| `--studio-accent` | `#58a6ff` | Links, active state, focus ring, primary button |
+| `--studio-danger` | `#f85149` | Error, destructive action |
+| `--studio-success` | `#3fb950` | Success state |
+| `--studio-warning` | `#d29922` | Warning state |
+| `--studio-font` | system-ui | All UI text |
+| `--studio-font-mono` | SF Mono / Fira Code | JSON editor, code, paths |
+| `--studio-text-xs` | `11px` | Badges, metadata |
+| `--studio-text-sm` | `12px` | Labels, input text |
+| `--studio-text-base` | `13px` | Default body text |
+| `--studio-radius` | `6px` | Inputs, buttons, cards |
+| `--studio-radius-lg` | `8px` | Modals, panels |
+| `--studio-gap` | `8px` | Default gap |
+| `--studio-gap-lg` | `12px` | Section spacing |
 
 ---
 

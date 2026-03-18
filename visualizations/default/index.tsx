@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import { mdiFlash } from '@mdi/js';
 import { useConnectorData, useHubbleSDK } from '@hubble/sdk';
 import { Icon } from './components/Icon';
@@ -17,40 +17,20 @@ import './style.css';
 const HubbleMelaRecipeViewerViz = () => {
   const data = useConnectorData<RecipeViewerData>();
   const sdk = useHubbleSDK();
-
-  // DEBUG: trace what useConnectorData returns
-  console.debug('[RecipeViewer] useConnectorData returned:', data === null ? 'null' : `recipes=${Object.keys(data?.recipes || {}).length}`);
-
   const nav = useRecipeNavigation(data);
 
-  // Use ref so button handlers always call the latest handleButton
-  const handleButtonRef = useRef(nav.handleButton);
-  handleButtonRef.current = nav.handleButton;
-
-  // Wire hardware buttons — only re-register when sdk changes (once)
+  // When the connector sets a pendingTimer (via navigate/start-timer or navigate/contextual),
+  // start it in hubble-timer and clear the pending state.
+  const pendingTimer = data?.navigation?.pendingTimer ?? null;
   useEffect(() => {
-    const unsub1 = sdk.onButton('button1', () => handleButtonRef.current('primary'));
-    const unsub2 = sdk.onButton('button2', () => handleButtonRef.current('back'));
-    const unsub3 = sdk.onButton('button3', () => handleButtonRef.current('contextual'));
-    const unsub4 = sdk.onButton('button4', () => handleButtonRef.current('switch'));
-    return () => {
-      unsub1();
-      unsub2();
-      unsub3();
-      unsub4();
-    };
-  }, [sdk]);
-
-  // Handle pending timer
-  useEffect(() => {
-    if (nav.pendingTimer) {
+    if (pendingTimer) {
       sdk.callApi('start-available', {
-        duration: nav.pendingTimer.durationSeconds,
-        label: nav.pendingTimer.label,
+        duration: pendingTimer.durationSeconds,
+        label: pendingTimer.label,
       }, 'hubble-timer');
-      nav.clearPendingTimer();
+      sdk.callApi('clear-pending-timer');
     }
-  }, [nav.pendingTimer, nav.clearPendingTimer, sdk]);
+  }, [pendingTimer, sdk]);
 
   // No data or no recipes
   if (!data || !data.recipes || Object.keys(data.recipes).length === 0) {

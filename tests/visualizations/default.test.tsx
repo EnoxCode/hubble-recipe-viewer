@@ -168,6 +168,21 @@ describe('RecipeSwitcher', () => {
 
 // --- Integration tests for the main visualization component ---
 
+function makeDefaultNavigation(activeRecipeId: string, recipeIds: string[] = [activeRecipeId]) {
+  const recipes: Record<string, object> = {};
+  for (const id of recipeIds) {
+    recipes[id] = {
+      phase: 'waiting',
+      currentGroupIndex: 0,
+      currentStepIndex: 0,
+      gatherCursorIndex: 0,
+      gatheredIngredientIds: [],
+      usedIngredientIds: [],
+    };
+  }
+  return { activeRecipeId, recipes, pendingTimer: null };
+}
+
 function makeTestRecipe(overrides: Partial<ProcessedRecipe> = {}): ProcessedRecipe {
   return {
     id: 'test-1',
@@ -216,14 +231,20 @@ describe('HubbleMelaRecipeViewerViz (integration)', () => {
   });
 
   it('renders empty state when data has no recipes', () => {
-    vi.mocked(useConnectorData).mockReturnValue({ recipes: {} });
+    vi.mocked(useConnectorData).mockReturnValue({
+      recipes: {},
+      navigation: { activeRecipeId: '', recipes: {}, pendingTimer: null },
+    });
     render(<HubbleMelaRecipeViewerViz />);
     expect(screen.getByText('Waiting for recipe…')).toBeInTheDocument();
   });
 
   it('renders processing state for processing recipe', () => {
     const recipe = makeTestRecipe({ id: 'p1', status: 'processing', title: 'Slow Cooker Chili' });
-    vi.mocked(useConnectorData).mockReturnValue({ recipes: { p1: recipe } });
+    vi.mocked(useConnectorData).mockReturnValue({
+      recipes: { p1: recipe },
+      navigation: makeDefaultNavigation('p1'),
+    });
     render(<HubbleMelaRecipeViewerViz />);
     expect(screen.getByText('Slow Cooker Chili')).toBeInTheDocument();
     expect(screen.getByText('AI is extracting steps, timers, and tips…')).toBeInTheDocument();
@@ -236,14 +257,20 @@ describe('HubbleMelaRecipeViewerViz (integration)', () => {
       title: 'Bad Recipe',
       error: 'Failed to parse ingredients',
     });
-    vi.mocked(useConnectorData).mockReturnValue({ recipes: { e1: recipe } });
+    vi.mocked(useConnectorData).mockReturnValue({
+      recipes: { e1: recipe },
+      navigation: makeDefaultNavigation('e1'),
+    });
     render(<HubbleMelaRecipeViewerViz />);
     expect(screen.getByText('Failed to parse ingredients')).toBeInTheDocument();
   });
 
   it('renders recipe title and ingredients for ready recipe', () => {
     const recipe = makeTestRecipe();
-    vi.mocked(useConnectorData).mockReturnValue({ recipes: { 'test-1': recipe } });
+    vi.mocked(useConnectorData).mockReturnValue({
+      recipes: { 'test-1': recipe },
+      navigation: makeDefaultNavigation('test-1'),
+    });
     render(<HubbleMelaRecipeViewerViz />);
     expect(screen.getByText('Test Beef Stir-fry')).toBeInTheDocument();
     expect(screen.getByText('350g flank steak')).toBeInTheDocument();
@@ -292,7 +319,10 @@ describe('HubbleMelaRecipeViewerViz (integration)', () => {
         },
       ],
     });
-    vi.mocked(useConnectorData).mockReturnValue({ recipes: { 'test-1': recipe } });
+    vi.mocked(useConnectorData).mockReturnValue({
+      recipes: { 'test-1': recipe },
+      navigation: makeDefaultNavigation('test-1'),
+    });
     render(<HubbleMelaRecipeViewerViz />);
 
     // Overview panel shows group names (also appear in ingredient panel, so use getAllByText)

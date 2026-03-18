@@ -45,19 +45,28 @@ export interface ProcessedTimer {
   maxDurationSeconds?: number;
 }
 
-/** Emitted data shape from connector */
-export interface RecipeViewerData {
-  recipes: Record<string, ProcessedRecipe>;
-}
-
-/** Per-recipe UI state managed in the visualization */
+/** Navigation phase for a recipe */
 export type RecipePhase = 'waiting' | 'gathering' | 'cooking' | 'done';
 
-export interface RecipeUIState {
+/** Per-recipe navigation state managed by the connector */
+export interface RecipeNavState {
   phase: RecipePhase;
   currentGroupIndex: number;
   currentStepIndex: number;
   gatherCursorIndex: number;
-  gatheredIngredientIds: Set<string>;
-  usedIngredientIds: Set<string>;
+  gatheredIngredientIds: string[];
+  usedIngredientIds: string[];
+}
+
+/** Navigation state included in connector-emitted data */
+export interface NavigationState {
+  activeRecipeId: string;
+  recipes: Record<string, RecipeNavState>;
+  pendingTimer: ProcessedTimer | null;
+}
+
+/** Emitted data shape from connector */
+export interface RecipeViewerData {
+  recipes: Record<string, ProcessedRecipe>;
+  navigation: NavigationState;
 }
